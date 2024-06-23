@@ -10,7 +10,8 @@
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
-            font-size: 18px; /* Aumentar tamaño de fuente base */
+            background-color: #00A0B0; /* Color de fondo similar al de la imagen */
+            color: white; /* Asegurar buena legibilidad */
         }
         .question {
             margin-bottom: 20px;
@@ -18,12 +19,13 @@
         button {
             display: block;
             width: 100%;
-            padding: 15px; /* Aumentar el tamaño del padding */
+            padding: 15px;
             margin-top: 10px;
             background-color: #f0f0f0;
             border: none;
             cursor: pointer;
-            font-size: 18px; /* Aumentar tamaño de fuente del botón */
+            font-size: 18px;
+            color: #333; /* Color del texto del botón */
         }
         button:hover {
             background-color: #e0e0e0;
@@ -33,27 +35,69 @@
             margin-top: 20px;
         }
         .icon {
-            width: 50px;
-            height: 50px;
+            width: 100%;
+            height: auto;
             display: block;
             margin: 0 auto 20px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            text-align: center;
+            color: #333; /* Color del texto modal */
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
     <h1>Uso del celular en la escuela : ¿Qué harías?</h1>
-    <img src="https://cdn-icons-png.flaticon.com/512/147/147142.png" alt="Celular Icono" class="icon">
+    <img src="https://planosinfin.com/wp-content/uploads/2018/05/Captura-de-pantalla-2016-05-04-a-las-17.27.42.png" alt="Celular Icono" class="icon">
     <div id="quiz"></div>
     <div id="result"></div>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="modalText"></p>
+            <button id="retryButton" onclick="retryQuiz()">Intentar de nuevo</button>
+        </div>
+    </div>
 
     <script>
         const questions = [
             {
-                question: "1. Durante las clases, ¿cómo debería manejar tu hijo el uso del celular?",
+                question: "1. ¿Qué debería hacer tu hijo con su celular al entrar al aula?",
                 answers: [
-                    "a) Usarlo para revisar redes sociales cuando el profesor no está mirando",
+                    "a) Tenerlo en la mano para revisarlo constantemente",
                     "b) Mantenerlo en silencio y guardado en la mochila",
-                    "c) Revisarlo solo en los descansos"
+                    "c) Colocarlo sobre el pupitre"
                 ],
                 correct: 1
             },
@@ -131,9 +175,45 @@
         function showResult() {
             const resultContainer = document.getElementById("result");
             resultContainer.innerHTML = `Has respondido correctamente ${score} de ${questions.length} preguntas.`;
+            showModal();
+        }
+
+        function showModal() {
+            const modal = document.getElementById("myModal");
+            const modalText = document.getElementById("modalText");
+            const retryButton = document.getElementById("retryButton");
+
+            if (score >= 3) {
+                modalText.innerText = "¡Felicidades! Has respondido correctamente más de 3 preguntas.";
+                retryButton.style.display = "none";
+            } else {
+                modalText.innerText = "Lo siento, has respondido correctamente menos de 3 preguntas. Inténtalo de nuevo.";
+                retryButton.style.display = "inline-block";
+            }
+            modal.style.display = "block";
+        }
+
+        function retryQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            displayQuestion();
+            document.getElementById("myModal").style.display = "none";
         }
 
         displayQuestion();
+
+        // Close the modal when the user clicks on <span> (x)
+        document.getElementsByClassName("close")[0].onclick = function() {
+            document.getElementById("myModal").style.display = "none";
+        }
+
+        // Close the modal when the user clicks anywhere outside of the modal
+        window.onclick = function(event) {
+            const modal = document.getElementById("myModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
     </script>
 </body>
 </html>
